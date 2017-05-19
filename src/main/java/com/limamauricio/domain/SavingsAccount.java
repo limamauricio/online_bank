@@ -1,17 +1,25 @@
 package com.limamauricio.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by Mauricio on 18/05/2017.
  */
+@Entity
 public class SavingsAccount {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private int accountNumber;
     private BigDecimal accountBalance;
 
+    @OneToMany(mappedBy = "savingsAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<SavingsTransaction> savingsTransactionList;
 
     public Long getId() {
@@ -45,4 +53,6 @@ public class SavingsAccount {
     public void setSavingsTransactionList(List<SavingsTransaction> savingsTransactionList) {
         this.savingsTransactionList = savingsTransactionList;
     }
+
+
 }

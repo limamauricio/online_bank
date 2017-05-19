@@ -1,26 +1,43 @@
 package com.limamauricio.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.List;
 
 /**
  * Created by Mauricio on 18/03/2017.
  */
+@Entity
+@Table(name = "user_profile")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userId", nullable = false, updatable = false)
     private Long userId;
     private String username;
     private String password;
     private String firstName;
     private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     private String phone;
 
-    private boolean enable = true;
+    private boolean enable=true;
 
-    private PrimaryAccount pAccount;
-    private SavingsAccount sAccount;
+    @OneToOne
+    private PrimaryAccount primaryAccount;
 
+    @OneToOne
+    private SavingsAccount savingsAccount;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Appointment> appointmentList;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Recipient> recipientList;
 
 
@@ -88,20 +105,20 @@ public class User {
         this.enable = enable;
     }
 
-    public PrimaryAccount getpAccount() {
-        return pAccount;
+    public PrimaryAccount getPrimaryAccount() {
+        return primaryAccount;
     }
 
-    public void setpAccount(PrimaryAccount pAccount) {
-        this.pAccount = pAccount;
+    public void setPrimaryAccount(PrimaryAccount primaryAccount) {
+        this.primaryAccount = primaryAccount;
     }
 
     public SavingsAccount getsAccount() {
-        return sAccount;
+        return savingsAccount;
     }
 
-    public void setsAccount(SavingsAccount sAccount) {
-        this.sAccount = sAccount;
+    public void setSavingsAccountt(SavingsAccount sAccount) {
+        this.savingsAccount = savingsAccount;
     }
 
     public List<Appointment> getAppointmentList() {
@@ -131,8 +148,8 @@ public class User {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", enable=" + enable +
-                ", pAccount=" + pAccount +
-                ", sAccount=" + sAccount +
+                ", primaryAccount=" + primaryAccount +
+                ", savingsAccount=" + savingsAccount +
                 ", appointmentList=" + appointmentList +
                 ", recipientList=" + recipientList +
                 '}';
